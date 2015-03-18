@@ -14,6 +14,7 @@ module.exports = function(transform) {
 }
 
 var walk = function(node) {
+  if (!node) return node;
   switch (node.type) {
     case "Program":
     node.body.map(walk); break;

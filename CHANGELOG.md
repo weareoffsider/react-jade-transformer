@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased Changes
 
+## 0.1.1 - 2015-03-18
+### Fixed
+- Tree walker null checks (for blank files)
+
 ## 0.1.0 - 2015-03-18
 ### Added
 - Initial release.
