@@ -41,7 +41,7 @@ var flattenLeftWhitespace = function(string) {
 }
 
 
-var convertJadeTree = function(jadeNode, ix, siblings) {
+var convertJadeTree = function(jadeNode, ix, siblings, nested) {
   if (jadeNode.nodes) {
     return convertJadeTree(jadeNode.nodes[0]);
   } else if (jadeNode.buffer) { // is a variable
@@ -142,14 +142,39 @@ var convertJadeTree = function(jadeNode, ix, siblings) {
     };
 
     return jsNode;
-  } else if (jadeNode.val && jadeNode.val.slice(0,4) == "if (" ) {
-    // is an if statement
-    var testExpr = esprima.parse(jadeNode.val.slice(4, -1)).body[0].expression;
+  } else if (jadeNode.val && (
+    jadeNode.val.slice(0,4) == "if (" ||
+    (jadeNode.val.slice(0,9) == "else if (" && nested) ||
+    jadeNode.val.slice(0,8) == "unless (" ||
+    (jadeNode.val.slice(0,13) == "else unless (" && nested)
+  )) {
+    // is an if or unless statement
+    // jade does not appear to support 'else unless', but if it ever does
+    // we are prepared for it.
+    var stringExpr;
+    if (jadeNode.val.slice(0,4) == "if (") {
+      stringExpr = jadeNode.val.slice(4,-1);
+    } else if (jadeNode.val.slice(0,8) == "unless (") {
+      stringExpr = "!" + jadeNode.val.slice(8,-1);
+    } else if (jadeNode.val.slice(0,9) == "else if (") {
+      stringExpr = jadeNode.val.slice(9,-1);
+    } else if (jadeNode.val.slice(0,9) == "else unless (") {
+      stringExpr = "!" + jadeNode.val.slice(13,-1);
+    }
+    
+    var testExpr = esprima.parse(stringExpr).body[0].expression;
 
     var next = siblings[ix + 1];
-    var alternate = (next && next.val.slice(0,4) == "else")
-      ? convertJadeTree(next.block.nodes[0])
-      : null;
+    if (
+      (next && next.val.slice(0, 9) == "else if (") ||
+      (next && next.val.slice(0, 13) == "else unless (")
+    ) {
+      var alternate = convertJadeTree(next, ix + 1, siblings, true);
+    } else {
+      var alternate = (next && next.val == "else")
+        ? convertJadeTree(next.block.nodes[0])
+        : null;
+    }
 
     return {
       "type": "ConditionalExpression",
