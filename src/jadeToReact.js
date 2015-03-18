@@ -120,7 +120,9 @@ var convertJadeTree = function(jadeNode) {
     };
 
     var props = buildPropsFromAttrs(jadeNode.attrs);
-    var children = jadeNode.block.nodes.map(convertJadeTree);
+    var children = jadeNode.block
+      ? jadeNode.block.nodes.map(convertJadeTree)
+      : [];
 
     if (jadeNode.code) {
       children.unshift(convertJadeTree(jadeNode.code));
@@ -165,7 +167,9 @@ var convertJadeTree = function(jadeNode) {
 
 
     var props = buildPropsFromAttrs(jadeNode.attrs);
-    var children = jadeNode.block.nodes.map(convertJadeTree);
+    var children = jadeNode.block
+      ? jadeNode.block.nodes.map(convertJadeTree)
+      : [];
 
     if (jadeNode.code) {
       children.unshift(convertJadeTree(jadeNode.code));

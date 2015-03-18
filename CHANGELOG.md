@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased Changes
 
+## 0.1.2 - 2015-03-18
+### Fixed
+- Added blank block check for Jade blocks.
+
 ## 0.1.1 - 2015-03-18
 ### Fixed
 - Tree walker null checks (for blank files)
