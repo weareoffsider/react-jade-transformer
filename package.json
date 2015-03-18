@@ -1,0 +1,33 @@
+{
+  "name": "react-jade-transformer",
+  "version": "0.1.0",
+  "description": "Really clean transforms from Jade to React in your Javascript",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/weareoffsider/react-jade-transformer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/weareoffsider/react-jade-transformer/issues"
+  },
+  "homepage": "https://github.com/weareoffsider/react-jade-transformer",
+  "author": "Offsider",
+  "license": "MIT",
+  "dependencies": {
+    "escodegen": "^1.6.1",
+    "esprima": "^2.1.0",
+    "jade": "^1.9.2"
+  },
+  "devDependencies": {
+    "babelify": "^5.0.4",
+    "browserify": "^9.0.3",
+    "gulp": "^3.8.11",
+    "gulp-util": "^3.0.4",
+    "through2": "^0.6.3",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0"
+  }
+}
