@@ -46,9 +46,47 @@ var walk = function(node) {
       return jadeToReact(node.arguments[0].value);
     } else {
       node.callee = walk(node.callee);
-      node.arguments.map(walk);
+      node.arguments = node.arguments.map(walk);
     }
     break;
+
+    case "ExpressionStatement":
+    node.expression = walk(node.expression);
+    break;
+
+    case "ConditionalExpression":
+    node.test = walk(node.test);
+    node.consequent = walk(node.consequent);
+    node.alternate = walk(node.alternate);
+    break;
+
+    case "IfStatement":
+    node.test = walk(node.test);
+    node.consequent = walk(node.consequent);
+    node.alternate = walk(node.alternate);
+    break;
+
+    case "SwitchStatement":
+    node.discriminant = walk(node.discriminant);
+    node.cases = node.cases.map(walk);
+    break;
+
+    case "SwitchCase":
+    node.test = walk(node.test);
+    node.consequent = node.consequent.map(walk);
+    break;
+
+    case "ArrayExpression": 
+    node.elements = node.elements.map(walk); break;
+
+    case "MemberExpression": break;
+    case "Literal": break;
+    case "Identifier": break;
+    case "EmptyStatement": break;
+
+    default:
+    console.log("Unhandled Node in Tree", node);
   }
+
   return node;
 };

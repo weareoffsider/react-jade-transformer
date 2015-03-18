@@ -15,6 +15,8 @@ something sensible in React yet.
 - Mixins as Components
 - Buffered Output
 - Each/For
+- If/Else
+- Switch
 - Classes
 
 ## Usage

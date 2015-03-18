@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased Changes
 
+## 0.1.3 - 2015-03-18
+### Added
+- Support for If/Else, Switch
+- JS Traversal now goes into If/Else, Switch statements.
+
 ## 0.1.2 - 2015-03-18
 ### Fixed
 - Added blank block check for Jade blocks.

@@ -1,6 +1,7 @@
 var Parser = require("jade/lib/parser.js");
 var jade = require("jade/lib/runtime.js");
 var esprima = require("esprima");
+var _ = require("lodash");
 
 
 module.exports = function(string) {
@@ -40,13 +41,58 @@ var flattenLeftWhitespace = function(string) {
 }
 
 
-var convertJadeTree = function(jadeNode) {
+var convertJadeTree = function(jadeNode, ix, siblings) {
   if (jadeNode.nodes) {
     return convertJadeTree(jadeNode.nodes[0]);
   } else if (jadeNode.buffer) { // is a variable
     return {
       "type": "Identifier",
       "name": jadeNode.val
+    };
+  } else if (jadeNode.expr) {
+
+
+    var cases = jadeNode.block.nodes.map(function(caseNode) {
+      var sExpr = caseNode.expr == "default"
+        ? null
+        : esprima.parse(caseNode.expr).body[0].expression;
+
+      return {
+        "type": "SwitchCase",
+        "test": sExpr,
+        "consequent": [{
+          "type": "ReturnStatement",
+          "argument": convertJadeTree(caseNode.block.nodes[0]),
+        }]
+      }
+    });
+
+    var testExpr = esprima.parse(jadeNode.expr).body[0].expression;
+
+    var switchFunction = {
+      "type": "FunctionExpression",
+      "id": null,
+      "params": [],
+      "defaults": [],
+      "generator": false,
+      "expression": false,
+      "body": {
+        "type": "BlockStatement",
+        "body": [{
+          "type": "SwitchStatement",
+          "discriminant": testExpr,
+          "cases": cases
+        }]
+      }
+    };
+
+    return {
+      "type": "ExpressionStatement",
+      "expression": {
+        "type": "CallExpression",
+        "callee": switchFunction,
+        "arguments": []
+      },
     };
   } else if (jadeNode.obj) { // is an each statement
     if (jadeNode.block.nodes.length > 1) {
@@ -96,6 +142,23 @@ var convertJadeTree = function(jadeNode) {
     };
 
     return jsNode;
+  } else if (jadeNode.val && jadeNode.val.slice(0,4) == "if (" ) {
+    // is an if statement
+    var testExpr = esprima.parse(jadeNode.val.slice(4, -1)).body[0].expression;
+
+    var next = siblings[ix + 1];
+    var alternate = (next && next.val.slice(0,4) == "else")
+      ? convertJadeTree(next.block.nodes[0])
+      : null;
+
+    return {
+      "type": "ConditionalExpression",
+      "test": testExpr,
+      "consequent": convertJadeTree(jadeNode.block.nodes[0]),
+      "alternate": alternate
+    }
+  } else if (jadeNode.val && jadeNode.val.slice(0,4) == "else" ) {
+    return null;
   } else if (jadeNode.val) { // is a standard string
     return {
       "type": "Literal",
@@ -121,7 +184,7 @@ var convertJadeTree = function(jadeNode) {
 
     var props = buildPropsFromAttrs(jadeNode.attrs);
     var children = jadeNode.block
-      ? jadeNode.block.nodes.map(convertJadeTree)
+      ? _.compact(jadeNode.block.nodes.map(convertJadeTree))
       : [];
 
     if (jadeNode.code) {
@@ -168,7 +231,7 @@ var convertJadeTree = function(jadeNode) {
 
     var props = buildPropsFromAttrs(jadeNode.attrs);
     var children = jadeNode.block
-      ? jadeNode.block.nodes.map(convertJadeTree)
+      ? _.compact(jadeNode.block.nodes.map(convertJadeTree))
       : [];
 
     if (jadeNode.code) {
