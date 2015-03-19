@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased Changes
 
+## 0.1.9 - 2015-03-20
+### Fixed
+- Fix lone 'if's crashing code generator.
+
 ## 0.1.8 - 2015-03-20
 ### Fixed
 - Fix non else expression following lone 'if' clause in Jade

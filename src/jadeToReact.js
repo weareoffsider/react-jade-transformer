@@ -158,7 +158,7 @@ var convertJadeTree = function(jadeNode, ix, siblings, nested) {
       stringExpr = "!" + jadeNode.val.slice(8,-1);
     } else if (jadeNode.val.slice(0,9) == "else if (") {
       stringExpr = jadeNode.val.slice(9,-1);
-    } else if (jadeNode.val.slice(0,9) == "else unless (") {
+    } else if (jadeNode.val.slice(0,13) == "else unless (") {
       stringExpr = "!" + jadeNode.val.slice(13,-1);
     }
     
@@ -173,7 +173,7 @@ var convertJadeTree = function(jadeNode, ix, siblings, nested) {
     } else {
       var alternate = (next && next.val == "else")
         ? convertJadeTree(next.block.nodes[0])
-        : null;
+        : {"type": "Identifier", "name": "null"};
     }
 
     return {
