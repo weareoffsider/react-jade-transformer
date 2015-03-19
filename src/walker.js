@@ -66,7 +66,16 @@ var walk = function(node) {
     node.alternate = walk(node.alternate);
     break;
 
+    case "ForInStatement":
     case "ForStatement":
+    node.body = walk(node.body); break;
+
+    case "NewExpression":
+    node.callee = walk(node.callee);
+    node.arguments = node.arguments.map(walk);
+    break;
+
+    case "FunctionDeclaration":
     node.body = walk(node.body); break;
 
     case "SwitchStatement":
@@ -82,6 +91,9 @@ var walk = function(node) {
     case "ArrayExpression": 
     node.elements = node.elements.map(walk); break;
 
+    case "SequenceExpression": 
+    node.expressions = node.expressions.map(walk); break;
+
     case "LogicalExpression":
     case "BinaryExpression":
     case "AssignmentExpression":
@@ -89,6 +101,7 @@ var walk = function(node) {
     node.right = walk(node.right);
     break;
 
+    case "ThrowStatement":
     case "UnaryExpression":
     node.argument = walk(node.argument);
     break;
@@ -96,6 +109,7 @@ var walk = function(node) {
     case "MemberExpression": break;
     case "Literal": break;
     case "Identifier": break;
+    case "BreakStatement": break;
     case "ThisExpression": break;
     case "EmptyStatement": break;
 
