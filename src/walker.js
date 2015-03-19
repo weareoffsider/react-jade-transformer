@@ -36,7 +36,7 @@ var walk = function(node) {
     node.body = walk(node.body); break;
 
     case "BlockStatement":
-    node.body.map(walk); break;
+    node.body = node.body.map(walk); break;
 
     case "ReturnStatement":
     node.argument = walk(node.argument); break;
@@ -66,6 +66,9 @@ var walk = function(node) {
     node.alternate = walk(node.alternate);
     break;
 
+    case "ForStatement":
+    node.body = walk(node.body); break;
+
     case "SwitchStatement":
     node.discriminant = walk(node.discriminant);
     node.cases = node.cases.map(walk);
@@ -79,9 +82,21 @@ var walk = function(node) {
     case "ArrayExpression": 
     node.elements = node.elements.map(walk); break;
 
+    case "LogicalExpression":
+    case "BinaryExpression":
+    case "AssignmentExpression":
+    node.left = walk(node.left);
+    node.right = walk(node.right);
+    break;
+
+    case "UnaryExpression":
+    node.argument = walk(node.argument);
+    break;
+
     case "MemberExpression": break;
     case "Literal": break;
     case "Identifier": break;
+    case "ThisExpression": break;
     case "EmptyStatement": break;
 
     default:

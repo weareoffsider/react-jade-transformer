@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased Changes
 
+## 0.1.5 - 2015-03-20
+### Fixed
+- Added handling for further expressions in analysing code, no longer misses
+  calls within for statements.
+
 ## 0.1.4 - 2015-03-19
 ### Added
 - Support for Unless/Else If
