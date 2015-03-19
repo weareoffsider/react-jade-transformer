@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased Changes
 
+## 0.1.7 - 2015-03-20
+### Fixed
+- More handler expressions for parsing.
+
 ## 0.1.6 - 2015-03-20
 ### Fixed
 - Added further handler expressions, closing out more misses in final pass.

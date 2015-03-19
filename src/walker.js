@@ -102,8 +102,21 @@ var walk = function(node) {
     break;
 
     case "ThrowStatement":
+    case "UpdateExpression":
     case "UnaryExpression":
     node.argument = walk(node.argument);
+    break;
+
+    case "TryStatement":
+    node.block = walk(node.block);
+    node.handler = walk(node.handler);
+    node.finalizer = walk(node.finalizer);
+    node.handlers = node.handlers.map(walk);
+    break;
+
+    case "CatchClause":
+    node.param = walk(node.param);
+    node.body = walk(node.body);
     break;
 
     case "MemberExpression": break;
