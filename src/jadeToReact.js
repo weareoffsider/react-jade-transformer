@@ -166,8 +166,8 @@ var convertJadeTree = function(jadeNode, ix, siblings, nested) {
 
     var next = siblings[ix + 1];
     if (
-      (next && next.val.slice(0, 9) == "else if (") ||
-      (next && next.val.slice(0, 13) == "else unless (")
+      (next && next.val && next.val.slice(0, 9) == "else if (") ||
+      (next && next.val && next.val.slice(0, 13) == "else unless (")
     ) {
       var alternate = convertJadeTree(next, ix + 1, siblings, true);
     } else {
