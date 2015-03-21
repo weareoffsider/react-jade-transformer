@@ -87,12 +87,9 @@ var convertJadeTree = function(jadeNode, ix, siblings, nested) {
     };
 
     return {
-      "type": "ExpressionStatement",
-      "expression": {
-        "type": "CallExpression",
-        "callee": switchFunction,
-        "arguments": []
-      },
+      "type": "CallExpression",
+      "callee": switchFunction,
+      "arguments": []
     };
   } else if (jadeNode.obj) { // is an each statement
     if (jadeNode.block.nodes.length > 1) {

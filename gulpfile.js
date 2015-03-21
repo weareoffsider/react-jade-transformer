@@ -1,6 +1,7 @@
 var browserify = require("browserify"),
     buffer     = require('vinyl-buffer'),
     babelify   = require("babelify"),
+    babel      = require("gulp-babel"),
     source     = require('vinyl-source-stream'),
     reactJade  = require("./src/index.js"),
     gulp       = require("gulp");
@@ -47,6 +48,8 @@ gulp.task('js', function() {
 
 gulp.task("node", function() {
   return gulp.src("./test/*.js")
-             .pipe(reactJade.gulp())
+             .pipe(reactJade.gulp({prepare: true}))
+             .pipe(babel())
+             .pipe(reactJade.gulp({transform: true}))
              .pipe(gulp.dest("./.tmp/testout"));
 });

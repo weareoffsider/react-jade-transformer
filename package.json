@@ -1,6 +1,6 @@
 {
   "name": "react-jade-transformer",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "Really clean transforms from Jade to React in your Javascript",
   "main": "src/index.js",
   "scripts": {
@@ -26,6 +26,7 @@
     "babelify": "^5.0.4",
     "browserify": "^9.0.3",
     "gulp": "^3.8.11",
+    "gulp-babel": "^4.0.0",
     "gulp-util": "^3.0.4",
     "through2": "^0.6.3",
     "vinyl-buffer": "^1.0.0",

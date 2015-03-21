@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased Changes
 
+## 0.1.10 - 2015-03-21
+### Fixed
+- Fixed Switch Statements outputting a semicolon mid statement.
+
 ## 0.1.9 - 2015-03-20
 ### Fixed
 - Fix lone 'if's crashing code generator.
