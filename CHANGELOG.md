@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased Changes
 
+## 0.1.11 - 2015-03-21
+### Added
+- String Classes and Calculated Classes (ie React.addons.classSet) can now
+  be safely mixed.
+- Object Literals can be used as attributes.
+- Components Argument can now be used in place of attribute properties, for
+  example: +Component(propsObject)
+
+### Fixed
+- Properties written as Literals rather than Identifier, so you can now use
+  attributes such as "data-foo".
+
 ## 0.1.10 - 2015-03-21
 ### Fixed
 - Fixed Switch Statements outputting a semicolon mid statement.

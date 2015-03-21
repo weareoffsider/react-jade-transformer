@@ -204,7 +204,12 @@ var convertJadeTree = function(jadeNode, ix, siblings, nested) {
       "arguments": []
     };
 
-    var props = buildPropsFromAttrs(jadeNode.attrs);
+    if (jadeNode.args) {
+      var props = esprima.parse(jadeNode.args).body[0].expression;
+    } else {
+      var props = buildPropsFromAttrs(jadeNode.attrs);
+    }
+
     var children = jadeNode.block
       ? _.compact(jadeNode.block.nodes.map(convertJadeTree))
       : [];
@@ -281,6 +286,7 @@ var buildPropsFromAttrs = function(attrs) {
   };
 
   var classes = [];
+  var calcClasses = [];
 
   attrs.forEach(function(attr) {
     var literal = isLiteral(attr.val);
@@ -290,14 +296,17 @@ var buildPropsFromAttrs = function(attrs) {
     if (safeName == "for") safeName = "htmlFor";
 
 
+    console.log(attr);
 
     if (literal && attr.name == "class") {
       classes.push(val);
+    } else if (!literal && attr.name == "class") {
+      calcClasses.push(val);
     } else if (literal) {
       props.properties.push({
         "type": "Property",
         "key": {
-          "type": "Identifier",
+          "type": "Literal",
           "name": safeName,
         },
         "computed": false,
@@ -313,19 +322,54 @@ var buildPropsFromAttrs = function(attrs) {
       props.properties.push({
         "type": "Property",
         "key": {
-          "type": "Identifier",
-          "name": safeName,
+          "type": "Literal",
+          "value": safeName,
         },
         "computed": false,
-        "value": esprima.parse(val).body[0].expression,
+        "value": parseAttributeCode(val),
         "kind": "init",
         "method": false,
         "shorthand": false
       });
+
     }
   });
 
-  if (classes.length > 0) {
+  if (classes.length > 0 || calcClasses.length > 0) {
+    var classValue, calcClassValue, finalClassValue;
+    if (classes.length > 0) {
+      classValue = {
+        "type": "Literal",
+        "value": classes.join(" ") + " "
+      }
+    } 
+  
+    if (calcClasses.length > 0) {
+      calcClassValue = calcClasses.reduceRight(function(accExpr, calcExpr) {
+        if (!accExpr) {
+          return parseAttributeCode(calcExpr)
+        } else {
+          return {
+            "type": "BinaryExpression",
+            "operator": "+",
+            "left": parseAttributeCode(calcExpr),
+            "right": accExpr
+          };
+        }
+      }, null);
+    }
+
+    if (classValue && calcClassValue) {
+      finalClassValue = {
+        "type": "BinaryExpression",
+        "operator": "+",
+        "left": classValue,
+        "right": calcClassValue
+      };
+    } else {
+      finalClassValue = classValue || calcClassValue;
+    }
+
     props.properties.push({
       "type": "Property",
       "key": {
@@ -333,14 +377,31 @@ var buildPropsFromAttrs = function(attrs) {
         "name": "className",
       },
       "computed": false,
-      "value": {
-        "type": "Literal",
-        "value": classes.join(" ")
-      },
+      "value": finalClassValue,
       "method": false,
       "shorthand": false
     });
   }
 
+
   return props;
+}
+
+
+var parseAttributeCode = function(attrCode) {
+    if (attrCode[0] == "{" && attrCode[attrCode.length - 1] == "}") {
+      // wrap object literal blocks to ensure esprima parses correctly as
+      // as an expression rather than a block
+      attrCode = "(" + attrCode + ")";
+    }
+
+    var element = esprima.parse(attrCode).body[0];
+
+    switch (element.type) {
+      case "ExpressionStatement":
+      return element.expression;
+
+      case "BlockStatement":
+      return element.body[0];
+    }
 }

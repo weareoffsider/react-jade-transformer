@@ -88,6 +88,11 @@ var walk = function(node) {
     node.consequent = node.consequent.map(walk);
     break;
 
+    case "WhileStatement":
+    node.test = walk(node.test);
+    node.body = walk(node.body);
+    break;
+
     case "ArrayExpression": 
     node.elements = node.elements.map(walk); break;
 
