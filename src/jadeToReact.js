@@ -296,8 +296,6 @@ var buildPropsFromAttrs = function(attrs) {
     if (safeName == "for") safeName = "htmlFor";
 
 
-    console.log(attr);
-
     if (literal && attr.name == "class") {
       classes.push(val);
     } else if (!literal && attr.name == "class") {
@@ -307,7 +305,7 @@ var buildPropsFromAttrs = function(attrs) {
         "type": "Property",
         "key": {
           "type": "Literal",
-          "name": safeName,
+          "value": safeName,
         },
         "computed": false,
         "value": {

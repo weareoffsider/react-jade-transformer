@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased Changes
 
+## 0.1.12 - 2015-03-21
+### Fixed
+- Fixed regression introduced, literals incorrectly build for code generator.
+
 ## 0.1.11 - 2015-03-21
 ### Added
 - String Classes and Calculated Classes (ie React.addons.classSet) can now
