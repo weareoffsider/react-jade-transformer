@@ -4,7 +4,8 @@
   "description": "Really clean transforms from Jade to React in your Javascript",
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "pretest": "gulp node",
+    "test": "mocha test.js"
   },
   "repository": {
     "type": "git",
@@ -23,11 +24,14 @@
     "lodash": "^3.5.0"
   },
   "devDependencies": {
+    "async": "^0.9.0",
     "babelify": "^5.0.4",
     "browserify": "^9.0.3",
+    "diff": "^1.3.1",
     "gulp": "^3.8.11",
     "gulp-babel": "^4.0.0",
     "gulp-util": "^3.0.4",
+    "mocha": "^2.2.1",
     "through2": "^0.6.3",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
