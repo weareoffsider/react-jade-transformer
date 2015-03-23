@@ -19,6 +19,278 @@ something sensible in React yet.
 - Switch
 - Classes
 
+
+
+## Transformation Reference
+
+All Jade Transformations would be written inside rj tagged with backticks, for
+example rj``span.spanClass``. This reference is written with the assumption that
+you know Jade and React syntax.
+
+### Basic Structure
+
+All standard DOM elements will transform to a `React.DOM` call.
+
+```
+span.spanClass
+```
+
+```
+React.DOM.span({ className: 'spanClass ' });
+```
+
+Attributes render as properties.
+
+```
+.component#someId(data-foo="bar")
+```
+
+```
+React.DOM.div({
+    'id': 'someId',
+    'data-foo': 'bar',
+    className: 'component '
+});
+```
+
+Jade Classes will get mixed with a class property, so you can use shorthand
+classes in conjunction with classSet or equivalent.
+
+```
+.component(class=React.addons.classSet(classesObj))
+```
+
+```
+React.DOM.div({ className: 'component ' + React.addons.classSet(classesObj) });
+```
+
+Object Literals can be passed in for properties such as style.
+
+```
+.component(style={width: 234})
+```
+
+```
+React.DOM.div({
+    'style': { width: 234 },
+    className: 'component '
+});
+```
+
+Jade does NOT support objects being passed to standard DOM elements (only
+mixins), so this will not work as you expect:
+
+```
+.component(propsObj)
+```
+
+```
+React.DOM.div({
+    'propsObj': true,
+    className: 'component '
+});
+```
+
+Nesting Children and Strings works as you would expect:
+
+```
+.component
+  h1.component__title This is the title
+```
+
+```
+React.DOM.div({ className: 'component ' },
+  React.DOM.h1({ className: 'component__title ' }, 'This is the title')
+);
+```
+
+
+### Variables
+
+Variables can be output using the standard Jade syntax for buffered output.
+
+```
+.component
+  h1.component__title= this.props.title
+```
+
+```
+React.DOM.div({ className: 'component ' },
+  React.DOM.h1({ className: 'component__title ' }, this.props.title)
+);
+```
+
+This would also work for breaking up components as variables, ie:
+
+```
+var title = rj`h1.component__title= this.props.title`
+
+rj`
+.component
+  = title
+`
+```
+
+```
+var title = React.DOM.h1({ className: 'component__title ' }, this.props.title);
+
+React.DOM.div({ className: 'component ' }, title);
+```
+
+### If Conditionals
+
+If/Unless Conditionals are rendered as ternary statements.
+
+```
+.component
+  if this.props.title
+    h1.component__title= this.props.title
+  else
+    h2 No title Provided
+```
+
+```
+React.DOM.div({ className: 'component ' },
+  this.props.title
+    ? React.DOM.h1({ className: 'component__title ' }, this.props.title)
+    : React.DOM.h2({}, 'No title Provided')
+);
+```
+
+Be aware that you can ONLY return a single element from an If or Else
+Conditional:
+
+```
+.component
+  if this.props.title
+    h1.component__title= this.props.title
+    h2 This won't render
+  else
+    div
+      h1 These will both render
+      h2 So Will This
+```
+
+```
+React.DOM.div({ className: 'component ' },
+  this.props.title
+    ? React.DOM.h1({ className: 'component__title ' }, this.props.title)
+    : React.DOM.div({},
+        React.DOM.h1({}, 'These will both render'),
+        React.DOM.h2({}, 'So Will This')
+      )
+);
+```
+
+### Case Conditionals
+
+Cases created self calling functions that run a switch statement, so you can do
+longer cases within your components.
+
+```
+case someVar.length
+  when 0
+    h1 Nothing Here
+  when 1
+    h1 One Thing Here
+  default
+    h1 Lots of things here
+    h2 This will never be reached.
+```
+
+```
+(function () {
+    switch (someVar.length) {
+    case 0:
+        return React.DOM.h1({}, 'Nothing Here');
+    case 1:
+        return React.DOM.h1({}, 'One Thing Here');
+    default:
+        return React.DOM.h1({}, 'Lots of things here');
+    }
+}());
+```
+
+### Loops
+
+`each` is supported as a standard map function. `while` is not supported.
+
+```
+ul.items
+  each thing, ix in things
+    li.item(key=ix)= thing
+```
+
+```
+React.DOM.ul({ className: 'items ' },
+  things.map(function (thing, ix) {
+    return React.DOM.li({
+        'key': ix,
+        className: 'item '
+    }, thing);
+  })
+);
+```
+
+
+### Calling Components
+
+Just like JSX, you can call React Component Classes without a factory, by making
+use of Jade's mixin syntax.
+
+```
++Component(
+  onClick=this.onClick
+)
+```
+
+```
+React.createElement(Component, { 'onClick': this.onClick });
+```
+
+Unlike DOM elements, you can provide a single argument as the properties,
+allowing you to pass along props without writing out every single property.
+
+```
++Component(_.assign(this.props, {
+  "foo": "bar"
+}))
+```
+
+```
+React.createElement(Component, _.assign(this.props, { 'foo': 'bar' }));
+```
+
+Components take children same as elements.
+
+```
++Component(onClick=this.onClick)
+  p Some Children
+  p Some More Children
+```
+
+```
+React.createElement(Component, { 'onClick': this.onClick },
+  React.DOM.p({}, 'Some Children'),
+  React.DOM.p({}, 'Some More Children')
+);
+```
+
+
+### On the Roadmap
+
+This is a pretty early implementation so I'm not sure when I'll consider it
+'done'. Currently in use on some projects, I'm implementing things as I hit the
+use case, so file an issue if you feel like something can clearly be added to
+the transform. Things I can see coming:
+
+- unescaped output turning into `{dangerouslySetInnerHtml: {__html: ""}}`
+- propagating `this` inside map/switch statements
+- ability to use variable assignment (this might be more complex than I want to
+  support though, as we start building more closures and what not to make it
+  work)
+
+
 ## Usage
 
 Install with npm

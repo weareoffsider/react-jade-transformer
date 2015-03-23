@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased Changes
 
+## 0.2.0 - 2015-03-23
+### Added
+- Basic File Diff Tests
+- Documentation Reference
+
 ## 0.1.12 - 2015-03-21
 ### Fixed
 - Fixed regression introduced, literals incorrectly build for code generator.
