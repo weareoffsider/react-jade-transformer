@@ -11,10 +11,9 @@ var ArgumentsComponent = React.createClass({
     };
 
     return rj`
-      div.component.component--modifier
-        h3.component__title= this.props.title
-        p&attributes({className: "blue"})= this.props.children
-        +SomeComponent(comProps)&attributes(this.props)
+      div.component.component--modifier(
+        hello="imaprop"
+      )&attributes(this.props)
     `
   }
 });

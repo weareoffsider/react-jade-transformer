@@ -11,6 +11,9 @@ var ArgumentsComponent = React.createClass({
             b: 'Beta',
             c: 'Charlie'
         };
-        return React.DOM.div({ className: 'component component--modifier ' }, React.DOM.h3({ className: 'component__title ' }, this.props.title), React.DOM.p({ className: 'blue' }, this.props.children), React.createElement(SomeComponent, Object.assign(comProps, this.props)));
+        return React.DOM.div(Object.assign({
+            'hello': 'imaprop',
+            className: 'component component--modifier '
+        }, this.props));
     }
 });

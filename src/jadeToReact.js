@@ -210,6 +210,10 @@ var convertJadeTree = function(jadeNode, ix, siblings, nested) {
       var props = buildPropsFromAttrs(jadeNode.attrs);
     }
 
+    if (jadeNode.attributeBlocks && jadeNode.attributeBlocks.length > 0) {
+      props = parseAndAttributes(jadeNode.attributeBlocks, props);
+    }
+
     var children = jadeNode.block
       ? _.compact(jadeNode.block.nodes.map(convertJadeTree))
       : [];
@@ -225,6 +229,7 @@ var convertJadeTree = function(jadeNode, ix, siblings, nested) {
     return jsNode;
 
   } else { // is a standard dom node
+    var unescapedContent = false;
     var jsNode = {
       "type": "CallExpression",
       "callee": {
@@ -257,12 +262,31 @@ var convertJadeTree = function(jadeNode, ix, siblings, nested) {
 
 
     var props = buildPropsFromAttrs(jadeNode.attrs);
-    var children = jadeNode.block
-      ? _.compact(jadeNode.block.nodes.map(convertJadeTree))
-      : [];
 
-    if (jadeNode.code) {
-      children.unshift(convertJadeTree(jadeNode.code));
+    if (jadeNode.code && jadeNode.code.buffer && !jadeNode.code.escape) {
+      unescapedContent = true;
+      var children = [];
+      props.properties.push(addUnescapedHTML(jadeNode.code));
+    } else if (
+      jadeNode.block.nodes && jadeNode.block.nodes[0] &&
+      !jadeNode.block.nodes[0].escape && jadeNode.block.nodes[0].buffer
+    ) {
+      unescapedContent = true;
+      var children = [];
+      props.properties.push(addUnescapedHTML(jadeNode.block.nodes[0]));
+    } else {
+      var children = jadeNode.block
+        ? _.compact(jadeNode.block.nodes.map(convertJadeTree))
+        : [];
+
+      if (jadeNode.code) {
+        children.unshift(convertJadeTree(jadeNode.code));
+      }
+    }
+
+
+    if (jadeNode.attributeBlocks && jadeNode.attributeBlocks.length > 0) {
+      props = parseAndAttributes(jadeNode.attributeBlocks, props);
     }
 
     jsNode.arguments = [props].concat(children);
@@ -277,6 +301,44 @@ var isLiteral = function(str) {
   return (str[0] == '"' && str[str.length-1] == '"' ||
           str[0] == "'" && str[str.length-1] == "'");
 };
+
+
+var parseAndAttributes = function(andAttr, props) {
+  var props = props || {
+    "type": "ObjectExpression",
+    "properties": []
+  };
+  var attrBlocks = andAttr.map(function(block) {
+    return parseAttributeCode(block);
+  });
+
+  var isBlankProp = (
+    props.type == "ObjectExpression" &&
+    props.properties.length == 0
+  );
+
+  if (isBlankProp && attrBlocks.length == 1) {
+    return attrBlocks[0];
+  }
+
+  var attrProps = {
+    "type": "CallExpression",
+    "callee": {
+      "type": "MemberExpression",
+      "computed": false,
+      "object": {
+        "type": "Identifier",
+        "name": "Object",
+      },
+      "property": {
+        "type": "Identifier",
+        "name": "assign",
+      },
+    },
+    "arguments": [props].concat(attrBlocks)
+  }
+  return attrProps;
+}
 
 
 var buildPropsFromAttrs = function(attrs) {
@@ -384,6 +446,36 @@ var buildPropsFromAttrs = function(attrs) {
 
   return props;
 }
+
+
+var addUnescapedHTML = function(node) {
+  return {
+    "type": "Property",
+    "key": {
+      "type": "Identifier",
+      "name": "dangerouslySetInnerHTML",
+    },
+    "computed": false,
+    "value": {
+      "type": "ObjectExpression",
+      "properties": [{
+        "type": "Property",
+        "key": {
+          "type": "Identifier",
+          "name": "__html",
+        },
+        "computed": false,
+        "value": parseAttributeCode(node.val),
+        "kind": "init",
+        "method": false,
+        "shorthand": false,
+      }]
+    },
+    "kind": "init",
+    "method": false,
+    "shorthand": false
+  }
+};
 
 
 var parseAttributeCode = function(attrCode) {

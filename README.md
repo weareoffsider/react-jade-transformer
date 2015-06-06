@@ -276,6 +276,64 @@ React.createElement(Component, { 'onClick': this.onClick },
 );
 ```
 
+### &attributes
+
+One of the limitations of Jade is that you can't provide single arguments to
+DOM elements, for example:
+
+```
+div(propertiesObject)
+```
+
+...does not work, as the parser does not recognise it. The transformer supports
+&attributes to allow you to pass an extra property object to a DOM element or
+a component mixin:
+
+```
++Component(onClick=this.onClick)&attributes(this.props)
+  div&attributes({className: "blue")
+  p Some More Children
+```
+
+```
+React.createElement(Component, Object.assign({ 'onClick': this.onClick }, this.props),
+  React.DOM.div({className: "blue"}),
+  React.DOM.p({}, 'Some More Children')
+);
+```
+
+This transformation makes use of the `Object.assign` functionality, so the
+assumption is there that you'll shim Object.assign until Harmony is supported.
+This feels like a safe shim to work with, unlikely to drift in functionality
+from the specification.
+
+
+### Unescaped HTML
+
+Unescaped variables will be transformed into the standard property used for
+React's unescaped HTML.
+
+```
+article.article
+  section.article__content!= this.renderedHTML
+
+ -- or --
+
+article.article
+  section.article__content
+    != this.renderedHTML
+```
+
+```
+React.DOM.article({
+  className: "article"
+}, React.DOM.section({
+  dangerouslySetInnerHTML: {__html: this.renderedHTML}
+});
+```
+
+Extra children can not be provided when using unescaped HTML.
+
 
 ### On the Roadmap
 
