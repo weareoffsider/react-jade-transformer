@@ -298,8 +298,10 @@ var convertJadeTree = function(jadeNode, ix, siblings, nested) {
 
 
 var isLiteral = function(str) {
-  return (str[0] == '"' && str[str.length-1] == '"' ||
-          str[0] == "'" && str[str.length-1] == "'");
+  return (
+    (str[0] == '"' && str[str.length-1] == '"' && str.split('"').length == 3) ||
+    (str[0] == "'" && str[str.length-1] == "'" && str.split("'").length == 3)
+  )
 };
 
 

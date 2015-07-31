@@ -131,8 +131,8 @@ var walk = function(node) {
     case "ThisExpression": break;
     case "EmptyStatement": break;
 
-    default:
-    console.log("Unhandled Node in Tree", node);
+    // default:
+    // console.log("Unhandled Node in Tree", node);
   }
 
   return node;

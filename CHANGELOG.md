@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased Changes
 
+## 0.3.1 - 2015-07-31
+### Fixed
+- Fixed incorrect literal detection for jade attributes that are string
+  concatenations, for example:
+
+  a(
+    title="Prefix " + this.props.value + " Suffix"
+  )
+
+## 0.3.0 - 2015-06-06
+### Added
+- Added support for &attributes for DOM elements and Components
+- Added support for unescaped HTML for DOM elements.
+
 ## 0.2.0 - 2015-03-23
 ### Added
 - Basic File Diff Tests
