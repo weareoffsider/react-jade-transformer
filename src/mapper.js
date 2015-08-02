@@ -13,7 +13,7 @@ module.exports = function(src) {
       inJadeBlock = true
     } else if (inJadeBlock && src[cursor] == "`") {
       cursor++
-      stringTransform += '")'
+      stringTransform += '", this)'
       inJadeBlock = false
     } else if (inJadeBlock && src[cursor] == "\n") {
       cursor++

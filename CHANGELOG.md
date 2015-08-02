@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased Changes
 
+## 0.4.0 - 2015-08-03
+### Added
+- `this` is now bound (using Function.bind) to switch and map function
+  expressions (kinda embarrasing I didn't think of it sooner).
+- `this` is now added to the preparation step's string, which allows it to be
+  tracked even if an intermediate step assigns `this` to another variable (any
+  fat arrow transpiler does this when targeting ES5)
+
 ## 0.3.1 - 2015-07-31
 ### Fixed
 - Fixed incorrect literal detection for jade attributes that are string

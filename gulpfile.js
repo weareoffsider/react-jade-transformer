@@ -47,7 +47,8 @@ gulp.task('js', function() {
 
 
 gulp.task("node", function() {
-  return gulp.src("./test/*.js")
+  // return gulp.src("./test/*.js")
+  return gulp.src("./test/thisPropagation.js")
              .pipe(reactJade.gulp({prepare: true}))
              .pipe(babel())
              .pipe(reactJade.gulp({transform: true}))

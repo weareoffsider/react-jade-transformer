@@ -43,7 +43,7 @@ var walk = function(node) {
 
     case "CallExpression":
     if (node.callee.name == "___reactJadeTransform") {
-      return jadeToReact(node.arguments[0].value);
+      return jadeToReact(node.arguments[0].value, node.arguments[1]);
     } else {
       node.callee = walk(node.callee);
       node.arguments = node.arguments.map(walk);

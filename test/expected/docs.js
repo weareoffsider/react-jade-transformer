@@ -29,13 +29,13 @@ React.DOM.div({ className: 'component ' }, this.props.title ? React.DOM.h1({ cla
     default:
         return React.DOM.h1({}, 'Lots of things here');
     }
-}());
+}.bind(undefined)());
 React.DOM.ul({ className: 'items ' }, things.map(function (thing, ix) {
     return React.DOM.li({
         'key': ix,
         className: 'item '
     }, thing);
-}));
+}, undefined));
 React.createElement(Component, { 'onClick': this.onClick });
 React.createElement(Component, _.assign(this.props, { 'foo': 'bar' }));
 React.createElement(Component, { 'onClick': this.onClick }, React.DOM.p({}, 'Some Children'), React.DOM.p({}, 'Some More Children'));

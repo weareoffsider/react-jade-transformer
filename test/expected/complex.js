@@ -23,11 +23,11 @@ var TestComponent = React.createClass({
             default:
                 return React.DOM.p({ className: 'empty ' }, 'Is Empty');
             }
-        }(), !(things.length < 5) ? React.DOM.ul({ className: 'component__things ' }, things.map(function (thing, ix) {
+        }.bind(this)(), !(things.length < 5) ? React.DOM.ul({ className: 'component__things ' }, things.map(function (thing, ix) {
             return React.DOM.li({
                 'key': ix,
                 className: 'component_thing '
             }, thing);
-        })) : things.length > 0 ? React.DOM.p({ className: 'component__warning ' }, "You need more things! :(") : React.DOM.p({ className: 'component__warning ' }, "You got no things! :("));
+        }, this)) : things.length > 0 ? React.DOM.p({ className: 'component__warning ' }, "You need more things! :(") : React.DOM.p({ className: 'component__warning ' }, "You got no things! :("));
     }
 });

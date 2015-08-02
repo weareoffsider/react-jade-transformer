@@ -184,8 +184,9 @@ React.DOM.div({ className: 'component ' },
 
 ### Case Conditionals
 
-Cases created self calling functions that run a switch statement, so you can do
-longer cases within your components.
+Cases create self calling functions that run a switch statement, so you can do
+longer cases within your components. The function is bound to `this` so you can
+still access component methods.
 
 ```
 case someVar.length
@@ -208,12 +209,13 @@ case someVar.length
     default:
         return React.DOM.h1({}, 'Lots of things here');
     }
-}());
+}.bind(this));
 ```
 
 ### Loops
 
-`each` is supported as a standard map function. `while` is not supported.
+`each` is supported as a standard map function. `while` is not supported. The
+`this` variable is bound to the map function.
 
 ```
 ul.items
@@ -228,7 +230,7 @@ React.DOM.ul({ className: 'items ' },
         'key': ix,
         className: 'item '
     }, thing);
-  })
+  }, this)
 );
 ```
 
@@ -342,8 +344,6 @@ This is a pretty early implementation so I'm not sure when I'll consider it
 use case, so file an issue if you feel like something can clearly be added to
 the transform. Things I can see coming:
 
-- unescaped output turning into `{dangerouslySetInnerHtml: {__html: ""}}`
-- propagating `this` inside map/switch statements
 - ability to use variable assignment (this might be more complex than I want to
   support though, as we start building more closures and what not to make it
   work)
@@ -415,13 +415,15 @@ ___reactJadeTransform("\n
   div.component.component--modifier\n
     h3.component__title= this.props.title\n
     p= this.props.children\n
-")
+", this)
 ```
 
 The transform step converts any call to "___reactJadeTransform" into a React
 Component. With this approach, the function call should survive through any
 intermediate steps by conventional transpilers, as it is just a standard
-Javascript function call with a string argument.
+Javascript function call with a string argument and `this` attached. The latter
+argument is used so the transformer can keep up with arrow function assignment
+of the `this` variable.
 
 ### Gulp
 
