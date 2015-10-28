@@ -3,6 +3,8 @@ var gutil = require("gulp-util");
 
 var mapper = require("./mapper.js");
 var walker = require("./walker.js");
+var esprima = require("esprima");
+var escodegen = require("escodegen");
 
 
 module.exports.browserify = function(options) {
@@ -43,5 +45,31 @@ module.exports.gulp = function(options) {
     }
 
     cb(null, file);
+  });
+};
+
+module.exports.babelPrepare = function(bb) {
+  var types = bb.types;
+  return new bb.Plugin("react-jade-transformer-prepare", {
+    visitor: {
+      Program: function(node, parent) {
+        var genCode = escodegen.generate(node);
+        var preppedCode = mapper(genCode);
+        return esprima.parse(preppedCode);
+      },
+    },
+  });
+};
+
+module.exports.babelTransform = function(bb) {
+  var types = bb.types;
+  return new bb.Plugin("react-jade-transformer-transform", {
+    visitor: {
+      Program: function(node, parent) {
+        var genCode = escodegen.generate(node);
+        var preppedCode = walker(genCode);
+        return esprima.parse(preppedCode);
+      },
+    },
   });
 };

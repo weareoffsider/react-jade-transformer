@@ -453,6 +453,26 @@ gulp.task("node", function() {
 ```
 
 
+### Babel Plugin
+
+Transformation must be done either side of the babel transform, so for example,
+using Babel directly you would do the following:
+
+```
+var babel = require("babel");
+var reactJade = require("react-jade-transformer");
+
+babel.transform("code", {
+  plugins: [
+    {transformer: reactJade.babelPrepare, position: "before"},
+    {transformer: reactJade.babelTransform, position: "after"},
+  ]
+});
+```
+
+In this way, Babel will play nice with any other transformations you have.
+
+
 ## License
 Copyright (c) 2015 Offsider, used under The MIT License (MIT)
 

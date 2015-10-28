@@ -47,10 +47,21 @@ gulp.task('js', function() {
 
 
 gulp.task("node", function() {
-  // return gulp.src("./test/*.js")
-  return gulp.src("./test/thisPropagation.js")
+  return gulp.src("./test/*.js")
              .pipe(reactJade.gulp({prepare: true}))
              .pipe(babel())
              .pipe(reactJade.gulp({transform: true}))
+             .pipe(gulp.dest("./.tmp/testout"));
+});
+
+
+gulp.task("babelplugin", function() {
+  return gulp.src("./test/*.js")
+             .pipe(babel({
+               plugins: [
+                 {transformer: reactJade.babelPrepare, position: "before"},
+                 {transformer: reactJade.babelTransform, position: "after"},
+               ]
+             }))
              .pipe(gulp.dest("./.tmp/testout"));
 });

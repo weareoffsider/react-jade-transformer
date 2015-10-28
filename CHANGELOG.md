@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased Changes
 
+## 0.5.0 - 2015-10-28
+### Added
+- babel plugin support added. For posterity, I'm actually completely okay with
+  putting plugins for babel, browserify, etc inside this repo. Splitting it
+  for less code than text in the README.md seems counter-productive.
+
 ## 0.4.0 - 2015-08-03
 ### Added
 - `this` is now bound (using Function.bind) to switch and map function
