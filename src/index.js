@@ -48,26 +48,14 @@ module.exports.gulp = function(options) {
   });
 };
 
-module.exports.babelPrepare = function(bb) {
+module.exports.babel = function(bb) {
   var types = bb.types;
   return new bb.Plugin("react-jade-transformer-prepare", {
     visitor: {
       Program: function(node, parent) {
         var genCode = escodegen.generate(node);
         var preppedCode = mapper(genCode);
-        return esprima.parse(preppedCode);
-      },
-    },
-  });
-};
-
-module.exports.babelTransform = function(bb) {
-  var types = bb.types;
-  return new bb.Plugin("react-jade-transformer-transform", {
-    visitor: {
-      Program: function(node, parent) {
-        var genCode = escodegen.generate(node);
-        var preppedCode = walker(genCode);
+        var preppedCode = walker(preppedCode);
         return esprima.parse(preppedCode);
       },
     },

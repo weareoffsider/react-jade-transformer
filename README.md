@@ -425,6 +425,11 @@ Javascript function call with a string argument and `this` attached. The latter
 argument is used so the transformer can keep up with arrow function assignment
 of the `this` variable.
 
+That said though, the transformation is now isolated to JUST the
+reactJadeTransforms themselves, so often you can do all React Jade
+Transformations before any other parsers, so long as the next step is the chain
+supports standard Javascript syntax.
+
 ### Gulp
 
 ```
@@ -455,7 +460,7 @@ gulp.task("node", function() {
 
 ### Babel Plugin
 
-Transformation must be done either side of the babel transform, so for example,
+Transformation must be done before the babel transform, so for example,
 using Babel directly you would do the following:
 
 ```
@@ -464,13 +469,12 @@ var reactJade = require("react-jade-transformer");
 
 babel.transform("code", {
   plugins: [
-    {transformer: reactJade.babelPrepare, position: "before"},
-    {transformer: reactJade.babelTransform, position: "after"},
+    {transformer: reactJade.babel, position: "before"},
   ]
 });
 ```
 
-In this way, Babel will play nice with any other transformations you have.
+In this way, React Jade will play nice with any other transformations you have.
 
 
 ## License

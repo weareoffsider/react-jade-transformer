@@ -2,6 +2,7 @@ var browserify = require("browserify"),
     buffer     = require('vinyl-buffer'),
     babelify   = require("babelify"),
     babel      = require("gulp-babel"),
+    typescript = require("gulp-typescript"),
     source     = require('vinyl-source-stream'),
     reactJade  = require("./src/index.js"),
     gulp       = require("gulp");
@@ -55,12 +56,23 @@ gulp.task("node", function() {
 });
 
 
+gulp.task("typescript", function() {
+  return gulp.src("./test/*.ts")
+             .pipe(reactJade.gulp())
+             .pipe(typescript({
+               target: "ES6",
+               module: "commonjs",
+               moduleResolution: "node",
+             }))
+             .pipe(gulp.dest("./.tmp/testout"));
+});
+
+
 gulp.task("babelplugin", function() {
   return gulp.src("./test/*.js")
              .pipe(babel({
                plugins: [
-                 {transformer: reactJade.babelPrepare, position: "before"},
-                 {transformer: reactJade.babelTransform, position: "after"},
+                 {transformer: reactJade.babel, position: "before"},
                ]
              }))
              .pipe(gulp.dest("./.tmp/testout"));

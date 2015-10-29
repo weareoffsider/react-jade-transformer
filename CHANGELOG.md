@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased Changes
 
+## 1.0.0 - 2015-10-30
+### Added
+- production commitment
+
+### Changed
+- parsing is done in an isolated manner, so custom syntax is allowed to exist
+  outside the React Jade strings. The key benefit of this is languages that
+  cannot be parsed by Esprima, such as typescript, can be transformed before
+  going through their compiler, keeping typechecking intact.
+- babel Plugin is no longer separate operations, use reactJade.babel 'before'
+  using the standard babel transformations.
+
 ## 0.5.0 - 2015-10-28
 ### Added
 - babel plugin support added. For posterity, I'm actually completely okay with

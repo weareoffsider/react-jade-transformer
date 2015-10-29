@@ -55,7 +55,7 @@ rj`
       h2 So Will This
 `
 
-rj`
+var caseStatement = rj`
 case someVar.length
   when 0
     h1 Nothing Here
