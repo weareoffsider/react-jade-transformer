@@ -10,6 +10,11 @@ var MATCH1 = /___reactJadeTransform\(\"(.*)(?=\",)\", ([\w]+)\)/
 module.exports = function(transform, isolate) {
   var transformed = transform;
   var matches = transform.match(MATCH);
+
+  if (!matches) {
+    return transformed;
+  }
+
   for (var ix = 0; ix < matches.length; ix++) {
     var matchExpr = matches[ix];
     var callAst = esprima.parse(matchExpr);
