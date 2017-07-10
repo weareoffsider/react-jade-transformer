@@ -5,6 +5,7 @@ var mapper = require("./mapper.js");
 var walker = require("./walker.js");
 var esprima = require("esprima");
 var escodegen = require("escodegen");
+var loaderUtils = require("loader-utils");
 
 
 module.exports.browserify = function(options) {
@@ -48,6 +49,20 @@ module.exports.gulp = function(options) {
   });
 };
 
+module.exports.webpack = function(source) {
+  var loaderOptions = loaderUtils.getOptions(this)
+  var options = {
+    prepare: typeof loaderOptions['prepare'] == 'undefined'
+      ? true
+      : loaderOptions.prepare,
+    transform: typeof loaderOptions['transform'] == 'undefined'
+      ? true
+      : loaderOptions.transform,
+  }
+
+  return doTransform(source, options)
+};
+
 module.exports.babel = function(bb) {
   var types = bb.types;
   return new bb.Plugin("react-jade-transformer-prepare", {
@@ -55,8 +70,8 @@ module.exports.babel = function(bb) {
       Program: function(node, parent) {
         var genCode = escodegen.generate(node);
         var preppedCode = mapper(genCode);
-        var preppedCode = walker(preppedCode);
-        return esprima.parse(preppedCode);
+        var finishedCode = walker(preppedCode);
+        return esprima.parse(finishedCode);
       },
     },
   });
