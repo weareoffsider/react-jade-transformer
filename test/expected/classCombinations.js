@@ -12,9 +12,9 @@ var ClassCombinations = React.createClass({
       "component--modifier": true
     };
 
-    return React.DOM.div({ className: 'component ' + React.addons.classSet(classy) }, React.DOM.div({
+    return DOM.div({ className: 'component ' + React.addons.classSet(classy) }, DOM.div({
     'style': { 'width': 234 },
     className: 'handlebars '
-}), React.DOM.h3({ className: 'component__title ' }, this.props.title), React.DOM.p({}, this.props.children));
+}), DOM.h3({ className: 'component__title ' }, this.props.title), DOM.p({}, this.props.children));
   }
 });

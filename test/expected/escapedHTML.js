@@ -7,10 +7,10 @@ var ArgumentsComponent = React.createClass({
     title: "The Title"
   },
   render: function render() {
-    return React.DOM.section({ className: 'component ' }, React.DOM.div({
+    return DOM.section({ className: 'component ' }, DOM.div({
     className: 'component__content ',
     dangerouslySetInnerHTML: { __html: this.escapedHTML }
-}), React.DOM.div({
+}), DOM.div({
     className: 'component__content ',
     dangerouslySetInnerHTML: { __html: this.escapedHTMLTwo }
 }));

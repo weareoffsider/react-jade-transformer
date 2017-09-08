@@ -1,5 +1,6 @@
 declare var SomeOtherComponent: any;
 declare var React: any;
+declare var DOM: any;
 
 const TestComponent = React.createClass({
   exampleProps: {

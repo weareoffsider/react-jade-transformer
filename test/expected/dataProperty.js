@@ -14,9 +14,9 @@ var DataProperty = React.createClass({
       "c": "Charlie"
     };
 
-    return React.DOM.div({
+    return DOM.div({
     'data-some-key': comProps.a,
     className: 'component component--modifier '
-}, React.DOM.h3({ className: 'component__title ' }, this.props.title), React.DOM.p({}, this.props.children));
+}, DOM.h3({ className: 'component__title ' }, this.props.title), DOM.p({}, this.props.children));
   }
 });

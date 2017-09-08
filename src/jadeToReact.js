@@ -253,16 +253,8 @@ var convertJadeTreeWithThis = function(jadeTree, thisVar) {
           "type": "MemberExpression",
           "computed": false,
           "object": {
-            "type": "MemberExpression",
-            "computed": false,
-            "object": {
-              "type": "Identifier",
-              "name": "React",
-            },
-            "property": {
-              "type": "Identifier",
-              "name": "DOM",
-            },
+            "type": "Identifier",
+            "name": "DOM",
           },
           "property": {
             "type": "Identifier",

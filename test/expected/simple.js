@@ -8,6 +8,6 @@ var SimpleComponent = React.createClass({
     subtitle: "The Subtitle"
   },
   render: function render() {
-    return React.DOM.div({ className: 'component component--modifier ' }, React.DOM.h3({ className: 'component__title ' }, this.props.title), React.DOM.p({}, this.props.children));
+    return DOM.div({ className: 'component component--modifier ' }, DOM.h3({ className: 'component__title ' }, this.props.title), DOM.p({}, this.props.children));
   }
 });

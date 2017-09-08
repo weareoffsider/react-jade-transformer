@@ -8,25 +8,25 @@ var TestComponent = React.createClass({
     subtitle: "The Subtitle"
   },
   render: function render() {
-    var inserted = React.DOM.aside({ className: 'component__aside ' });
+    var inserted = DOM.aside({ className: 'component__aside ' });
     var myClass = "component__extra";
     var things = ["one", "two", "three"];
     var someCase = "blue";
 
-    return React.DOM.div({ className: 'component component--modifier component* ' }, React.DOM.h3({ className: 'component__title ' }, this.props.title), React.DOM.h4({ className: 'component__subtitle ' }, this.props.subtitle), React.DOM.p({ className: myClass }), React.DOM.p({}, 'Some hardcoded text.'), React.createElement(SomeOtherComponent, { 'variable': myClass }, React.DOM.h3({}, 'blah blah blah')), inserted, function () {
+    return DOM.div({ className: 'component component--modifier component* ' }, DOM.h3({ className: 'component__title ' }, this.props.title), DOM.h4({ className: 'component__subtitle ' }, this.props.subtitle), DOM.p({ className: myClass }), DOM.p({}, 'Some hardcoded text.'), React.createElement(SomeOtherComponent, { 'variable': myClass }, DOM.h3({}, 'blah blah blah')), inserted, function () {
     switch (someCase) {
     case 'blue':
-        return React.DOM.p({ className: 'blue ' }, 'Blue');
+        return DOM.p({ className: 'blue ' }, 'Blue');
     case 'red':
-        return React.DOM.p({ className: 'red ' }, 'Red');
+        return DOM.p({ className: 'red ' }, 'Red');
     default:
-        return React.DOM.p({ className: 'empty ' }, 'Is Empty');
+        return DOM.p({ className: 'empty ' }, 'Is Empty');
     }
-}.bind(this)(), !(things.length < 5) ? React.DOM.ul({ className: 'component__things ' }, things.map(function (thing, ix) {
-    return React.DOM.li({
+}.bind(this)(), !(things.length < 5) ? DOM.ul({ className: 'component__things ' }, things.map(function (thing, ix) {
+    return DOM.li({
         'key': ix,
         className: 'component_thing '
     }, thing);
-}, this)) : things.length > 0 ? React.DOM.p({ className: 'component__warning ' }, "You need more things! :(") : React.DOM.p({ className: 'component__warning ' }, "You got no things! :("));
+}, this)) : things.length > 0 ? DOM.p({ className: 'component__warning ' }, "You need more things! :(") : DOM.p({ className: 'component__warning ' }, "You got no things! :("));
   }
 });

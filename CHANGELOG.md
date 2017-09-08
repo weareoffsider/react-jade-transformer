@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased Changes
 
+## 2.0.0 - 2017-09-08
+### Changed
+- React.DOM is now DOM as per React's deprecation warnings for v16
+
 ## 1.0.1 - 2015-10-30
 ### Fixed
 - transform crashes on files without any React Jade code within.

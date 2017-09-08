@@ -16,7 +16,7 @@ var ArgumentsComponent = React.createClass({
     var _this = this;
 
     var subComponents = this.props.things.map(function (thing, ix) {
-      return React.DOM.div({
+      return DOM.div({
     'onClick': _this.eventHandler,
     'style': { width: _this.getWidth(_this) },
     'title': 'Some title ' + thing + ' testing concat inside',
@@ -26,6 +26,6 @@ var ArgumentsComponent = React.createClass({
 }, thing);
     });
 
-    return React.DOM.div({ className: 'component ' }, subComponents);
+    return DOM.div({ className: 'component ' }, subComponents);
   }
 });
